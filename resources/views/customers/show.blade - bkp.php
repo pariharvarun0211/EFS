@@ -47,9 +47,7 @@
         </table>
     </div>
 	<?php
-    $stocks_total_i = 0;
-	$stocks_total_c = 0;
-	$svalue = 0;
+    $stocks_total = 0;
     ?>
 	<div class="container">	
 	<br>
@@ -62,9 +60,7 @@
                 <th>No. of Shares</th>
                 <th>Purchase Price ($)</th>
                 <th>Purchase Date</th>
-				<th>Original Value ($)</th>
-				<th>Current Price ($)</th>
-				<th>Current Value ($)</th>
+				<th>Stock Total Value ($)</th>
                </tr>
             </thead>
             <tbody>
@@ -76,32 +72,13 @@
                         <td>{{ $stock->purchase_price }}</td>
                         <td>{{ $stock->purchased }}</td>
                         <td> <?php echo $stock['shares']*$stock['purchase_price'];
-                            $stocks_total_i = $stocks_total_i + $stock['shares'] * $stock['purchase_price']?>
-                        </td>
-						<?php
-                        $URL="https://finance.google.com/finance/info?client=ig&q=" . $stock->symbol;
-                        $file = fopen("$URL", "r");
-                        $r = "";
-                        do {
-                        $data = fread($file, 500);
-                        $r .= $data;
-                        } while (strlen($data) != 0);
-
-                        $json = str_replace("\n", "", $r);
-                        $data = substr($json, 4, strlen($json) - 5);
-                        $json_output = json_decode($data, true);
-                        $stock_curr_value = "\n" . $json_output['l'];
-                        ?>
-                        <td><?php echo '$', $stock_curr_value ?></td>
-                        <td> <?php echo $stock['shares']*$stock_curr_value;
-                            $stocks_total_c = $stocks_total_c + $stock['shares'] * $stock_curr_value?>
+                            $stocks_total = $stocks_total + $stock['shares'] * $stock['purchase_price']?>
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
-		<h4> Total value of Stocks (Initial) = <?php echo '$'."$stocks_total_i" ?></h4>
-		<h4> Total value of Stocks (Current) = <?php echo '$'."$stocks_total_c" ?></h4>
+		<h4> Total value of Stocks = <?php echo '$'."$stocks_total" ?></h4>
     </div>
 <br>
 <?php
@@ -147,12 +124,16 @@
 		<?php
 		$assets = 0;
 		?>
-		<div class="container">	
-		<h2>Summary of Portfolio</h2>
-		<?php $init_port_value = $sum_investment_initial + $stocks_total_i ?>
-		<h4> Total of Initial Portfolio Value = <?php echo '$'."$init_port_value" ?></h4>
-		<?php $current_port_value = $sum_investment_current + $stocks_total_c ?>
-		<h4> Total of Current Portfolio Value = <?php echo '$'."$current_port_value" ?></h4>
-		</div>
+		<table class="table table-striped table-bordered table-hover">
+		<tbody>
+            <tr class="bg-info">
+            <tr>
+                <td>Total value of Stocks & Investments</td>
+                <?php $assets = $sum_investment_initial + $stocks_total ?>
+				<td><?php echo '$'."$assets" ?></td>
+            </tr>
+			</tr>
+		<tbody>
+		</table>
     </div>	
 	@stop

@@ -22,3 +22,4 @@ Route::resource('investments','InvestmentController');
 Route::auth();
 
 Route::get('/home', 'HomeController@index');
+Route::get('customers/{id}/stringify', 'CustomerController@stringify');
